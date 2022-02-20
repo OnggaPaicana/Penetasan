@@ -85,6 +85,11 @@ def deploy():
     db.session.commit()
     print("All tools created.")
 
+@app.cli.command()
+def create_table():
+    """Create tables"""
+    db.create_all()
+    print("Table created.")
 
 if __name__ == "__main__":
     app.run(debug=True)
