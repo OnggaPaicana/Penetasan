@@ -1,0 +1,22 @@
+{% extends "components/base.html" %} {% block content %}
+<!-- temp and Humi -->
+{% include 'components/humiAndTemp.html' %}
+<!-- End temp and Humi -->
+
+<!-- Date and time -->
+{% include 'components/dateAndTime.html' %}
+<!-- End date and time -->
+
+<!-- Button -->
+<div class="container">
+  <form method="post">
+    <div class="text-center d-grid gap-1">
+      <button class="btn btn-primary" type="submit" name="start" value="start">
+        Mulai
+      </button>
+    </div>
+  </form>
+</div>
+<!-- End button -->
+
+{% endblock %}
