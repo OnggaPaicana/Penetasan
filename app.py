@@ -5,41 +5,42 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 import os
 
-# Konfigurasi untuk folder aplikasi
+# Get path
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+
+# Initialize app
 app = Flask(__name__)
 moment= Moment(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///datetime.db'
 db = SQLAlchemy(app)
 
-# membuat tabel
-class pengeraman(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    tanggal =db.Column(db.DateTime, unique=True, nullable=False,  default=datetime.utcnow)
-    bulan =db.Column(db.DateTime, unique=True, nullable=False,  default=datetime.utcnow)
-    tahun =db.Column(db.DateTime, unique=True, nullable=False,  default=datetime.utcnow)
-    jam =db.Column(db.DateTime, unique=True, nullable=False,  default=datetime.utcnow)
-    menit =db.Column(db.DateTime, unique=True, nullable=False,  default=datetime.utcnow)
-    detik =db.Column(db.DateTime, unique=True, nullable=False,  default=datetime.utcnow)
-    waktu_mulai =db.Column(db.DateTime, unique=True, nullable=False,  default=datetime.utcnow)
-    total_hari =db.Column(db.DateTime, unique=True, nullable=False,  default=datetime.utcnow)
+# Configuration
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
-def __repr__(self):
-		return "id: {}, waktu mulai: {}, tanggal: {}, bulan: {},tahun: {}, jam: {}, menit: {}, detik: {}, Total Hari: {}".format(self.waktu_mulai, self.tanggal, self.bulan, self.tahun, self.jam, self.menit, self.detik, self.total_hari)
-        
-db.create_all()
-# Sensor untuk DHT11
+# Create Tabel Pengeraman
+class Pengeraman(db.Model):
+    id = db.Column("pengeraman_id", db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    created_at = db.Column(db.Datetime, nullable=False)
+    updated_at = db.Column(db.Datetime, nullable=False)
+
+    def __init__(self):
+        pass
     
+    def __repr__(self):
+        return "<Name {}>".format(self.name)
+
+# Router
 @app.route("/")
 def index():
-    return render_template('index.html',waktu=datetime.utcnow(),title='Mulai Pengeraman')
+    return render_template('index.html', waktu=datetime.utcnow(), title='Mulai Pengeraman')
 
 
 
 @app.route("/start")
 def start():
-    return render_template('pengeraman.html', pengeraman =pengeraman.query.all(), title='Proses Pengeraman')
+    return render_template('pengeraman.html', pengeraman=pengeraman.query.all(), title='Proses Pengeraman')
 
 
 if __name__ == '__main__':
