@@ -1,13 +1,8 @@
-{% extends "components/base.html" %} {% block content %}
+{% from 'bootstrap4/table.html' import render_table %} {% extends
+"components/base.html" %} {% block content %}
 
 <!-- Button -->
-<div class="container my-5">
-  <a href="index.html">
-    <div class="text-center d-grid gap-1">
-      <button class="btn btn-primary" type="button">Stop Pengeraman</button>
-    </div>
-  </a>
-</div>
+{% include 'components/button.html' %}
 <!-- End button -->
 
 <!-- Day -->
@@ -77,137 +72,8 @@
         </div>
 
         <!-- Table -->
-        <div class="container my-3">
-          <table class="table table-bordered table-striped text-dark">
-            <thead>
-              <tr class="text-center">
-                <th>Perangkat</th>
-                <th>Kondisi Perangkat</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for light in lights %}
-              <tr class="text-center">
-                <td>
-                  <div class="rounded">
-                    <img
-                      src="{{ url_for('static',filename='gambar/lampu1.png')}}"
-                      style="width: 100px; height: 85px"
-                    />
-                  </div>
-                  <div class="text-center">
-                    <h6><b>Lampu {{ light }}</b></h6>
-                  </div>
-                </td>
-
-                <td>
-                  {% if first_light is true %}
-                  <div
-                    class="container"
-                    style="width: 50%; padding-bottom: 8px; padding-top: 14px"
-                  >
-                    <a href="pengeraman.html">
-                      <div class="text-center d-grid gap-1">
-                        <button class="btn btn-primary" type="button">
-                          On
-                        </button>
-                      </div>
-                    </a>
-                  </div>
-                  {% else %}
-                  <div class="container" style="width: 50%">
-                    <a href="pengeraman.html">
-                      <div class="text-center d-grid gap-1">
-                        <button class="btn btn-secondary" type="button">
-                          Off
-                        </button>
-                      </div>
-                    </a>
-                  </div>
-                  {% endif %}
-                </td>
-              </tr>
-              {% endfor %}
-
-              <tr class="text-center">
-                <td>
-                  <div class="rounded">
-                    <img
-                      src="{{ url_for('static',filename='gambar/kipasDC.png')}}"
-                      style="width: 100px; height: 85px"
-                    />
-                  </div>
-                  <div class="text-center">
-                    <h6><b>Kipas DC</b></h6>
-                  </div>
-                </td>
-
-                <td>
-                  <div
-                    class="container"
-                    style="width: 50%; padding-bottom: 8px; padding-top: 14px"
-                  >
-                    <a href="pengeraman.html">
-                      <div class="text-center d-grid gap-1">
-                        <button class="btn btn-primary" type="button">
-                          On
-                        </button>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="container" style="width: 50%">
-                    <a href="pengeraman.html">
-                      <div class="text-center d-grid gap-1">
-                        <button class="btn btn-secondary" type="button">
-                          Off
-                        </button>
-                      </div>
-                    </a>
-                  </div>
-                </td>
-              </tr>
-
-              <tr class="text-center">
-                <td>
-                  <div class="rounded">
-                    <img
-                      src="{{ url_for('static',filename='gambar/motorAC.png')}}"
-                      style="width: 100px; height: 85px"
-                    />
-                  </div>
-                  <div class="text-center">
-                    <h6><b>Motor AC</b></h6>
-                  </div>
-                </td>
-
-                <td>
-                  <div
-                    class="container"
-                    style="width: 50%; padding-bottom: 8px; padding-top: 14px"
-                  >
-                    <a href="pengeraman.html">
-                      <div class="text-center d-grid gap-1">
-                        <button class="btn btn-primary" type="button">
-                          On
-                        </button>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="container" style="width: 50%">
-                    <a href="{{ url_for('static',filename='pengeraman.html')}}">
-                      <div class="text-center d-grid gap-1">
-                        <button class="btn btn-secondary" type="button">
-                          Off
-                        </button>
-                      </div>
-                    </a>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <!-- End table -->
+        <div class="container my-3">{{ render_table(tools) }}</div>
+        <!-- End Table -->
       </div>
     </div>
   </div>

@@ -1,0 +1,21 @@
+{% if button == "Start" %}
+<div class="container">
+  <form method="post">
+    <div class="text-center d-grid gap-1">
+      <button class="btn btn-primary" type="submit" name="start" value="start">
+        {{ button }}
+      </button>
+    </div>
+  </form>
+</div>
+{% else %}
+<div class="container my-4">
+  <form method="post">
+    <div class="text-center d-grid gap-1">
+      <button class="btn btn-danger" type="submit" name="start" value="start">
+        {{ button }}
+      </button>
+    </div>
+  </form>
+</div>
+{% endif %}

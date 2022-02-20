@@ -11,6 +11,9 @@
     {% block styles %} {{ bootstrap.load_css() }} {% endblock %}
 
     <title>{{title}}</title>
+    <!-- For moment -->
+    {{ moment.include_moment() }} {{ moment.locale('id') }}
+    <!-- End moment -->
     {% endblock %}
   </head>
   <body class="my-1">

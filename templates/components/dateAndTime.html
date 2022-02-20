@@ -4,6 +4,9 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title text-center">Date</h5>
+          <p class="text-center">
+            {{ moment(timestamp).format('Do MMMM YYYY')}}
+          </p>
         </div>
       </div>
     </div>
@@ -11,6 +14,7 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title text-center">Time</h5>
+          <p class="text-center">{{ moment(timestamp).format('hh:mm') }}</p>
         </div>
       </div>
     </div>
