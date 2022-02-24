@@ -1,9 +1,9 @@
 from flask import Flask, redirect, render_template, request, url_for
 from flask_moment import Moment
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap5
-import os
+import os, time
 
 # Get path
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -25,7 +25,9 @@ bootstrap = Bootstrap5(app)
 # Create Tabel Pengeraman
 class Pengeraman(db.Model):
     id = db.Column("pengeraman_id", db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
+    total_days = db.Column(db.Integer, default=0)
+    day = db.Column(db.Integer, default=1)
+    next_day = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -33,10 +35,68 @@ class Pengeraman(db.Model):
         return "<Name {}>".format(self.name)
 
 
+# Delete all record in Pengeraman
+def delete_record_of_pengeraman() -> None:
+    records = Pengeraman.query.all()
+    for record in records:
+        db.session.delete(record)
+        db.session.commit()
+
+
+# To run motor
+def run_motor() -> bool:
+    return True
+
+
+# To stop motor()
+def stop_motor() -> bool:
+    return False
+
+
+# To light_one_on
+def light_one_on() -> bool:
+    return True
+
+
+# To light_one_off
+def light_one_off() -> bool:
+    return False
+
+
+# To light_two_on
+def light_two_on() -> bool:
+    return True
+
+
+# To light_two_off
+def light_two_off() -> bool:
+    return False
+
+
+# To light_three_on
+def light_three_on() -> bool:
+    return True
+
+
+# To light_three_off
+def light_three_off() -> bool:
+    return False
+
+
+# To fan on
+def fan_on() -> bool:
+    return True
+
+
+# To fan off
+def fan_off() -> bool:
+    return False
+
+
 # Create table tools
 class Tools(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, nullable=False)
+    name = db.Column(db.String(64))
     active = db.Column(db.Boolean, default=False)
 
     def __repr__(self) -> str:
@@ -45,22 +105,118 @@ class Tools(db.Model):
 
 # Router home
 @app.route("/", methods=["GET", "POST"])
-def index():
+def index() -> render_template:
     if request.method == "POST":
-        if request.form["start"] == "start":  # Get button start
-            data = Pengeraman(name="Telur Ayam", created_at=datetime.utcnow())
-            db.session.add(data)  # add data
-            db.session.commit()  # push data to database
-            return redirect(url_for("start"))
+        # assignment date and time
+        get_datetime = datetime.utcnow()
+        get_next_datetime = datetime.utcnow()
+        get_next_datetime += timedelta(days=1)
+
+        # assignment data
+        data = Pengeraman(day=1, total_days=1)
+        data.created_at = get_datetime
+        data.next_day = get_next_datetime
+
+        # add data
+        db.session.add(data)
+
+        # push data to database
+        db.session.commit()
+        return redirect(url_for("start"))
     return render_template("pages/index.html", title="Start", timestamp=datetime.utcnow(), button="Start")
 
 
 # Router start
 @app.route("/start")
-def start():
-    first_data = Pengeraman.query.get(1)
+def start() -> render_template:
+    data = Pengeraman.query.get(1)
     tools = Tools.query.all()
-    timestamp = first_data.created_at
+    timestamp = data.created_at
+
+    return render_template(
+        "pages/pengeraman.html",
+        title="Proses Pengeraman",
+        timestamp=timestamp,
+        button="Stop",
+        tools=tools,
+    )
+
+
+@app.route("/background")
+def background() -> render_template:
+    data = Pengeraman.query.get(1)
+    tools = Tools.query.all()
+    timestamp = data.created_at
+
+    # Ubah temp with data real time temperature
+    temp = 0
+    humy = 0
+
+    # # putar rak 3 kali selang waktu 8 jam
+    # time.sleep(28800)
+    # run_motor()
+    # time.sleep(7)
+    # stop_motor()
+
+    while data.day <= 18:
+        data.created_at = datetime.utcnow()
+        if data.created_at == data.next_day:
+            get_next_datetime = datetime.utcnow()
+            get_next_datetime += timedelta(days=1)
+            data.next_day = get_next_datetime
+            db.session.add(data)
+            db.session.commit()
+
+        # Logic for temp
+        if temp >= 38:
+            if light_three_on():
+                light_two_off()
+            elif light_two_on():
+                light_two_off()
+            elif light_one_on():
+                light_one_off()
+
+        if temp <= 37:
+            if not light_three_off():
+                light_two_on()
+            elif not light_two_off():
+                light_two_on()
+            elif not light_one_off():
+                light_one_on()
+
+        # Logic for humy
+        if humy <= 55:
+            if not fan_off():
+                fan_on()
+        if humy >= 60:
+            if fan_on():
+                fan_off()
+
+    while data.day <= 21:
+        # Logic for temp
+        if temp >= 37:
+            if light_three_on():
+                light_two_off()
+            elif light_two_on():
+                light_two_off()
+            elif light_one_on():
+                light_one_off()
+        else:
+            if not light_three_off():
+                light_two_on()
+            elif not light_two_off():
+                light_two_on()
+            elif not light_one_off():
+                light_one_on()
+
+        # Logic for humy
+        if humy <= 70:
+            if not fan_off():
+                fan_on()
+        else:
+            if fan_on():
+                fan_off()
+
     return render_template(
         "pages/pengeraman.html",
         title="Proses Pengeraman",
@@ -72,7 +228,7 @@ def start():
 
 # make command insert of flask
 @app.cli.command()
-def insert():
+def insert() -> None:
     """Insert Tools to Database"""
     first_tool = Tools(name="Lampu 1")
     second_tool = Tools(name="Lampu 2")
@@ -87,7 +243,7 @@ def insert():
 
 # make command create table of flask
 @app.cli.command()
-def create_table():
+def create_table() -> None:
     """Create tables"""
     db.create_all()
     print("Table created.")
