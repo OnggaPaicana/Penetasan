@@ -29,7 +29,3 @@ def create_table() -> None:
     """Create tables"""
     db.create_all()
     print("Table created.")
-
-
-if __name__ == "__main__":
-    app.run(debug=True)

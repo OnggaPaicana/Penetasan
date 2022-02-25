@@ -1,21 +1,15 @@
 {% if button == "Start" %}
-<div class="container">
-  <form method="post">
-    <div class="text-center d-grid gap-1">
-      <button class="btn btn-primary" type="submit" name="start" value="start">
-        {{ button }}
-      </button>
-    </div>
-  </form>
+<div class="container my-4">
+  <div class="text-center d-grid gap-1">
+    <a class="btn btn-primary" href="{{ url_for('usr.start')}}">
+      {{ button }}
+    </a>
+  </div>
 </div>
 {% else %}
 <div class="container my-4">
-  <form method="post">
-    <div class="text-center d-grid gap-1">
-      <button class="btn btn-danger" type="submit" name="stop" value="stop">
-        {{ button }}
-      </button>
-    </div>
-  </form>
+  <div class="text-center d-grid gap-1">
+    <a class="btn btn-danger" href="{{ url_for('usr.stop')}}"> {{ button }} </a>
+  </div>
 </div>
 {% endif %}
