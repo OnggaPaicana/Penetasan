@@ -1,6 +1,8 @@
 from flask import Flask, redirect, render_template, request, url_for
 from flask_moment import Moment
 from datetime import datetime, timedelta
+#from Adafruit_DHT import read_retry
+#import RPi.GPIO as GPIO
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap5
 import os, time
@@ -8,6 +10,22 @@ import os, time
 # Get path
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+#GPIO.setmode(GPIO.BCM)
+#GPIO.setwarnings(False)
+#GPIO.setup(23, GPIO.OUT) # Lampu 1 dan2
+#GPIO.setup(24, GPIO.OUT) # Lampu 3
+#GPIO.setup(7, GPIO.OUT) # Motor AC
+#GPIO.output(8, GPIO.OUT) #Fan
+
+# Identifikasi GPIO
+#lampu1_2_nyala = GPIO.output(23, GPIO.LOW)
+# #lampu1_2_mati = GPIO.output(23, GPIO.HIGH)
+#lampu_3_nyala = GPIO.output(24, GPIO.LOW)
+#lampu_3_mati = GPIO.output(24, GPIO.HIGH)
+#stop_motor = GPIO.output(7, GPIO.HIGH)
+#run_motor = GPIO.output(7, GPIO.LOW)
+#fan_off = GPIO.output(8, GPIO.HIGH)
+#fan_on = GPIO.output(8, GPIO.LOW)
 
 # Initialize app
 app = Flask(__name__)
@@ -42,54 +60,62 @@ def delete_record_of_pengeraman() -> None:
         db.session.delete(record)
         db.session.commit()
 
-
 # To run motor
 def run_motor() -> bool:
+    #GPIO.output(7, GPIO.LOW)
     return True
 
 
 # To stop motor()
 def stop_motor() -> bool:
+    #GPIO.output(7, GPIO.HIGH)
     return False
 
 
 # To light_one_on
 def light_one_on() -> bool:
+    #GPIO.output(23, GPIO.LOW)
     return True
-
 
 # To light_one_off
 def light_one_off() -> bool:
+    #lampu_1_mati = GPIO.output(23, GPIO.HIGH)
     return False
 
 
 # To light_two_on
 def light_two_on() -> bool:
+    #GPIO.output(23, GPIO.LOW)
     return True
 
 
 # To light_two_off
 def light_two_off() -> bool:
+    #GPIO.output(23, GPIO.HIGH)
     return False
 
 
 # To light_three_on
 def light_three_on() -> bool:
+    #GPIO.output(24, GPIO.LOW)
     return True
 
 
 # To light_three_off
 def light_three_off() -> bool:
+     #GPIO.output(24, GPIO.HIGH)
     return False
 
 
 # To fan on
 def fan_on() -> bool:
+    #GPIO.output(8, GPIO.LOW)
     return True
 
 
 # To fan off
 def fan_off() -> bool:
+    #GPIO.output(8, GPIO.HIGH)
     return False
 
 
@@ -141,6 +167,9 @@ def start() -> render_template:
         tools=tools,
     )
 
+#def sensor():
+	#humidity, temperature = read_retry(11, 4)
+	#return humidity, temperature
 
 @app.route("/background")
 def background() -> render_template:
@@ -149,10 +178,13 @@ def background() -> render_template:
     timestamp = data.created_at
 
     # Ubah temp with data real time temperature
+    #data = sensor()
+    #temp = request.form["temp"]
+	#humy = request.form["humy"]
     temp = 0
     humy = 0
 
-    # # putar rak 3 kali selang waktu 8 jam
+    # putar rak 3 kali selang waktu 8 jam
     # time.sleep(28800)
     # run_motor()
     # time.sleep(7)
