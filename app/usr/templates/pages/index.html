@@ -9,11 +9,7 @@
 
 <!-- Button -->
 <div class="container">
-  <form method="post">
-    <button class="btn btn-danger" type="submit" name="stop" value="stop">
-      {{ button }}
-    </button>
-  </form>
+  <a class="btn btn-danger" href="{{ url_for('usr.start')}}"> {{ button }} </a>
 </div>
 <!-- End button -->
 
